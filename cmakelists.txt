@@ -1,6 +1,6 @@
 
 cmake_minimum_required(VERSION 3.14)
-project(FastNoiseSIMD VERSION 1.0.0 LANGUAGES CXX)
+project(fastnoise VERSION 1.0.0 LANGUAGES CXX)
 
 # Create a target for FastNoiseSIMD
 add_library(${PROJECT_NAME} STATIC)
@@ -9,13 +9,8 @@ add_library(${PROJECT_NAME} STATIC)
 file(GLOB CPP_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/FastNoiseSIMD/*.cpp)
 target_sources(${PROJECT_NAME}
     PRIVATE
-        FastNoiseSIMD_avx2.cpp
-        FastNoiseSIMD_avx512.cpp
-        FastNoiseSIMD_internal.cpp
-        FastNoiseSIMD_neon.cpp
-        FastNoiseSIMD_sse2.cpp
-        FastNoiseSIMD_sse41.cpp
-        FastNoiseSIMD.cpp
+        FastNoiseSIMD/FastNoiseSIMD_internal.cpp
+        FastNoiseSIMD/FastNoiseSIMD.cpp
 )
 
 # Specify the header files
@@ -26,7 +21,7 @@ target_include_directories(${PROJECT_NAME}
 )
 
 # Specify C++ standard
-target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_11)
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
 
 # Add alias to access the target with namespace
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
@@ -47,7 +42,7 @@ install(
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/FastNoiseSIMD
     FILES_MATCHING
         PATTERN "*.h"
-        PATTERN "*_internal.h" EXCLUDE
+        # PATTERN "*_internal.h" EXCLUDE
 )
 
 # Export target for find_package usage
@@ -70,11 +65,11 @@ install(FILES
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
 )
 
-configure_package_config_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/${PROJECT_NAME}Config.cmake.in
-    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
-    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
-)
+# configure_package_config_file(
+#     ${CMAKE_CURRENT_SOURCE_DIR}/cmake/${PROJECT_NAME}Config.cmake.in
+#     ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+#     INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+# )
 
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
